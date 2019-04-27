@@ -27,32 +27,27 @@ class Producto(models.Model):
 
     def crear_variaciones(self,user):
         variaciones = Variacion.objects.filter(producto=self)
-        llaves=Variacion.objects.values('llave').order_by('llave').distinct().count()
-
+        llaves=Variacion.objects.filter(producto=self).values('llave').order_by('llave').distinct().count()
         nueva_variaciones = list(itertools.combinations(variaciones, llaves))
-        producto_variacion_now=ProdcutoVariacion.objects.filter(producto=self).values_list("variaciones")
 
         for v in nueva_variaciones:
             keys=[]
             for item in v:
                 keys.append(item.llave)
             myList = list(set(keys))
-            print(myList)
-
             if len(myList)==llaves:
-                print("richard")
-                print(v)
-                print(producto_variacion_now)
-                pv=ProdcutoVariacion()
-                pv.producto=self
-                pv.nombre='%s' %(self.nombre)
-                pv.creador=user
-                pv.save()
+                name = '%s' %(self.nombre)
+                variaciones=[]
                 for item in v:
-                    pv.nombre='%s - %s' %(pv.nombre,item.valor)
-                    pv.variaciones.add(item)
+                    name ='%s - %s' %(name,item.valor)
+                    variaciones.append(item)
+                existe = ProdcutoVariacion.objects.filter(nombre=name)
+                if len(existe)==0:
+                    pv=ProdcutoVariacion()
+                    pv.producto=self
+                    pv.nombre=name
+                    pv.creador=user
                     pv.save()
-
 
 class PrecioProducto(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
