@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Producto, PrecioProducto, Variacion, ProdcutoVariacion
+from .models import Producto, PrecioProducto, Variacion, ProdcutoVariacion, Categoria
 import datetime
 
 
@@ -30,3 +30,8 @@ class ProdcutoVariacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProdcutoVariacion
         fields = '__all__'
+
+class CategoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categoria
+        fields = ('id','codigo','nombre','subname','peso','padre','hijos')

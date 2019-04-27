@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-from .serializers import ProductoSerializer, PrecioProductoSerializer, VariacionSerializer, ProdcutoVariacionSerializer
-from .models import Producto, PrecioProducto, Variacion, ProdcutoVariacion
+from .serializers import ProductoSerializer, PrecioProductoSerializer, VariacionSerializer, ProdcutoVariacionSerializer,CategoriaSerializer
+from .models import Producto, PrecioProducto, Variacion, ProdcutoVariacion,Categoria
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -36,3 +36,7 @@ class CrearVariaciones(APIView):
         if producto:
             producto[0].crear_variaciones(request.user)
         return Response(status=status.HTTP_201_CREATED)
+
+class CategoriaViewSet(viewsets.ModelViewSet):
+    serializer_class = CategoriaSerializer
+    queryset = Categoria.objects.filter(peso=0)

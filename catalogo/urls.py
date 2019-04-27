@@ -8,6 +8,7 @@ router.register(r'producto', ProductoViewSet)
 router.register(r'precio', PrecioProductoViewSet)
 router.register(r'variacion', VariacionViewSet)
 router.register(r'producto_variacion', ProdcutoVariacionViewSet)
+router.register(r'categoria', CategoriaViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
