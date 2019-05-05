@@ -22,15 +22,29 @@ class Proveedor(models.Model):
 class Compra(models.Model):
     fecha = models.DateTimeField()
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
-    monto = models.IntegerField()
+    monto = models.IntegerField(default=0)
     tipo = models.CharField(max_length=3, choices=TIPO_COMPRA)
     creador = models.OneToOneField(User, on_delete=models.CASCADE, blank = True, null=True)
 
 class DetalleCompra(models.Model):
-    compra = models.ForeignKey(Compra, on_delete=models.CASCADE)
+    compra = models.ForeignKey(Compra, related_name='compras', on_delete=models.CASCADE)
     producto = models.ForeignKey(ProdcutoVariacion, on_delete=models.CASCADE)
-    precio = models.IntegerField()
-    cantidad = models.IntegerField()
+    precio = models.IntegerField(default=0)
+    cantidad = models.IntegerField(default=0)
     unidad_compra = models.CharField(max_length=100)
-    total = models.IntegerField()
+    total = models.IntegerField(default=0)
     creador = models.OneToOneField(User, on_delete=models.CASCADE, blank = True, null=True)
+
+    def save(self, *args, **kwargs):
+        self.total = (self.precio/100) * self.cantidad
+        self.total = self.total*100
+        super(DetalleCompra, self).save(*args, **kwargs)
+        self.compra.monto = self.sumar_totales()
+        self.compra.save()
+
+    def sumar_totales(self):
+        compras = DetalleCompra.objects.filter(compra = self.compra)
+        total = 0
+        for c in compras:
+            total = total + c.total
+        return total

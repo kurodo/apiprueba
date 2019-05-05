@@ -31,7 +31,12 @@ class ProdcutoVariacionSerializer(serializers.ModelSerializer):
         model = ProdcutoVariacion
         fields = '__all__'
 
+
 class CategoriaSerializer(serializers.ModelSerializer):
+    label =serializers.SerializerMethodField()
     class Meta:
         model = Categoria
-        fields = ('id','codigo','nombre','subname','peso','padre','hijos')
+        fields = ('id','codigo','nombre','label','subname','peso','padre','hijos')
+
+    def get_label(self,obj):
+        return obj.nombre

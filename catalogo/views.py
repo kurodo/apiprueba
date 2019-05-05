@@ -39,4 +39,4 @@ class CrearVariaciones(APIView):
 
 class CategoriaViewSet(viewsets.ModelViewSet):
     serializer_class = CategoriaSerializer
-    queryset = Categoria.objects.filter(peso=0)
+    queryset = Categoria.objects.all()
